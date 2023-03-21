@@ -42,6 +42,72 @@ const useThings = (
 		[client, setThingsSorted]
 	)
 
+	React.useEffect(
+		() => {
+
+			const subscription = client
+				.channel(`public:things`)
+				.on(`postgres_changes`, { event: '*', schema: 'public', table: 'things' }, (payload) => {
+
+					switch(payload.eventType) {
+						case `INSERT`:
+
+							const newThing = payload.new as Thing
+
+							const newThings = [
+								...things,
+								newThing,
+							]
+
+							// @TODO(mzalla) Race conditions
+							setThingsSorted(newThings)
+
+							return;
+
+						case `UPDATE`:
+
+							const updatedThing = payload.new as Thing
+
+							const updatedThings = things.map(thing =>
+								(thing.id === updatedThing.id) ?
+									updatedThing :
+									thing
+							)
+
+							// @TODO(mzalla) Race conditions
+							setThingsSorted(updatedThings)
+
+							return;
+
+						case `DELETE`:
+
+							const { id } = payload.old as Thing
+
+							const remainingThings = things.filter(thing => {
+								return thing.id !== id
+							})
+
+							// @TODO(mzalla) Race conditions
+							setThingsSorted(remainingThings)
+
+							return;
+
+						default:
+							// Impossible?!
+							break;
+					}
+
+				})
+				.subscribe()
+
+			return () => {
+				subscription.unsubscribe()
+			}
+
+		},
+		[things, setThingsSorted]
+	)
+
 	return [things, setThings] as const
 
   }
