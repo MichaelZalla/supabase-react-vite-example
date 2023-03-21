@@ -14,9 +14,17 @@ const UserDetails = () => {
 
 	return (
 	  <div id="userDetails">
+
 		<h3>Hi, {user.user_metadata.full_name}</h3>
-		<img src={user.user_metadata.avatar_url} alt="User avatar" />
-		<p>UID: {user.id}</p>
+
+		<img src={user.user_metadata.avatar_url} alt="User avatar"
+			referrerPolicy="no-referrer" />
+
+		{
+			import.meta.env.DEV &&
+			<p>UID: {user.id}</p>
+		}
+
 	  </div>
 	)
 
