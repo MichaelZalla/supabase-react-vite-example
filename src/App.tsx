@@ -83,7 +83,7 @@ const useUser = (
     [client]
   );
 
-  return [user, setUser]
+  return [user, setUser] as const
 
 }
 
@@ -131,6 +131,26 @@ const SignOutButton = () => {
 
 }
 
+const UserContext = React.createContext<User|null>(null)
+
+const UserDetails = () => {
+
+  const user = React.useContext<User|null>(UserContext);
+
+  if(!user) {
+    return <></>
+  }
+
+  return (
+    <div id="userDetails">
+      <h3>Hi, {user.user_metadata.full_name}</h3>
+      <img src={user.user_metadata.avatar_url} alt="User avatar" />
+      <p>UID: {user.id}</p>
+    </div>
+  )
+
+}
+
 function App() {
 
   const [user] = useUser(sb);
@@ -147,40 +167,43 @@ function App() {
 
       <h1>Supaship.io</h1>
 
-      {
-        isSignedIn() ?
+      <UserContext.Provider value={user}>
+        {
+          isSignedIn() ?
 
-          // Signed in
-          <>
-            <section id="whenSignedIn">
+            // Signed in
+            <>
+              <section id="whenSignedIn">
 
-              <div id="userDetails"></div>
+                <UserDetails />
 
-              <SignOutButton />
+                <SignOutButton />
 
+              </section>
+
+              <section id="myThings" hidden={true}>
+
+                <h2>My Things</h2>
+
+                <div id="myThingsList">
+
+                </div>
+
+                <button id="createThing" className="btn btn-success">
+                  Create a Thing
+                </button>
+
+              </section>
+
+            </> :
+
+            // Signed out
+            <section id="whenSignedOut">
+              <SignInButton />
             </section>
+        }
+      </UserContext.Provider>
 
-            <section id="myThings" hidden={true}>
-
-              <h2>My Things</h2>
-
-              <div id="myThingsList">
-
-              </div>
-
-              <button id="createThing" className="btn btn-success">
-                Create a Thing
-              </button>
-
-            </section>
-
-          </> :
-
-          // Signed out
-          <section id="whenSignedOut">
-            <SignInButton />
-          </section>
-      }
 
       <section id="allThings">
 
