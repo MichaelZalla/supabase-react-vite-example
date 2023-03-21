@@ -21,6 +21,29 @@ const useUser = (
   React.useEffect(
     () => {
 
+      client.auth.onAuthStateChange((event, session) => {
+
+        switch(event) {
+
+          case `SIGNED_OUT`:
+            setUser(null)
+            break;
+
+          default:
+            // Do nothing
+            break;
+
+        }
+
+      })
+
+    },
+    [client]
+  )
+
+  React.useEffect(
+    () => {
+
       const fetchUser = async () => {
         return await sb.auth.getUser();
       }
@@ -87,8 +110,21 @@ const SignInButton = () => {
 
 const SignOutButton = () => {
 
+  const logout = React.useCallback(
+    async () => {
+
+      const { error } = await sb.auth.signOut()
+
+      if(error) {
+        console.error(error)
+      }
+
+    },
+    []
+  )
+
   return (
-    <button id="signOutBtn" className="btn btn-primary">
+    <button id="signOutBtn" className="btn btn-primary" onClick={(e) => logout()}>
       Sign Out
     </button>
   )
