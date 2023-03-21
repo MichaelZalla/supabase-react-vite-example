@@ -1,5 +1,6 @@
 {
   "name": "supabase-react-vite-example",
+  "homepage": "https://deluxe-rolypoly-3eaadf.netlify.app/",
   "repository": {
     "type": "git",
     "url": "https://github.com/MichaelZalla/supabase-react-vite-example.git"
