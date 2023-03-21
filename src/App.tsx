@@ -1,8 +1,8 @@
 import React from 'react';
 
-import './App.scss'
-
 import client from './client';
+
+import { Thing } from './types/collections/thing';
 
 import useUser from './hooks/useUser';
 import useThings from './hooks/useThings';
@@ -16,6 +16,10 @@ import UserDetails from './components/UserDetails';
 
 import ThingsTable from './components/ThingsTable';
 
+import { sortByWeight, makeRandomThing } from './utils';
+
+import './App.scss'
+
 function App() {
 
   const [user] = useUser(client);
@@ -25,6 +29,38 @@ function App() {
   const isSignedIn = React.useCallback(
     () => user !== null,
     [user]
+  )
+
+  const createThing = React.useCallback(
+    async () => {
+
+      if(!user) {
+        console.error('You must be authenticated to create a new Thing!');
+        return
+      }
+
+      const newPartialThing = makeRandomThing(user)
+
+      const { data, error } = await client.from(`things`)
+        .insert([newPartialThing])
+        .select();
+
+      if(!data) {
+        console.error(error)
+        return
+      }
+
+      const newThing = data[0] as Thing
+
+      const newThings = [
+        ...things,
+        newThing
+      ].sort(sortByWeight)
+
+      setThings(newThings)
+
+    },
+    [user, things, setThings]
   )
 
   return (
@@ -55,7 +91,8 @@ function App() {
 
                   </div>
 
-                  <button id="createThing" className="btn btn-success">
+                  <button id="createThing" className="btn btn-success"
+                    onClick={e => createThing()}>
                     Create a Thing
                   </button>
 
