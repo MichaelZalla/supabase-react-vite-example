@@ -85,6 +85,16 @@ const SignInButton = () => {
 
 }
 
+const SignOutButton = () => {
+
+  return (
+    <button id="signOutBtn" className="btn btn-primary">
+      Sign Out
+    </button>
+  )
+
+}
+
 function App() {
 
   const [user] = useUser(sb);
@@ -110,9 +120,7 @@ function App() {
 
               <div id="userDetails"></div>
 
-              <button id="signOutBtn" className="btn btn-primary">
-                Sign Out
-              </button>
+              <SignOutButton />
 
             </section>
 
