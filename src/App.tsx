@@ -68,7 +68,7 @@ function App() {
   return (
     <div className="App container py-4 px-3">
 
-      <h1>Supaship.io</h1>
+      <h1>Supabase+React+Vite Example</h1>
 
       <UserContext.Provider value={user}>
         <ThingsContext.Provider value={[things, setThings]}>
