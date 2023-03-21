@@ -12,14 +12,6 @@ const sb: SupabaseClient = createClient(
   SupabaseAnonKey
 )
 
-const login = async () => {
-
-  await sb.auth.signInWithOAuth({
-    provider: 'google',
-  })
-
-}
-
 const useUser = (
   client: SupabaseClient) =>
 {
@@ -72,6 +64,27 @@ const useUser = (
 
 }
 
+const SignInButton = () => {
+
+  const login = React.useCallback(
+    async () => {
+
+      await sb.auth.signInWithOAuth({
+        provider: 'google',
+      })
+
+    },
+    []
+  )
+
+  return (
+    <button id="signInBtn" className="btn btn-primary" onClick={(e) => login()}>
+      Sign In with Google
+    </button>
+  )
+
+}
+
 function App() {
 
   const [user] = useUser(sb);
@@ -121,9 +134,7 @@ function App() {
 
           // Signed out
           <section id="whenSignedOut">
-            <button id="signInBtn" className="btn btn-primary" onClick={(e) => login()}>
-              Sign In with Google
-            </button>
+            <SignInButton />
           </section>
       }
 
