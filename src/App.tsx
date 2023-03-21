@@ -10,6 +10,14 @@ const sb: SupabaseClient = createClient(
   SupabaseAnonKey
 )
 
+const login = async () => {
+
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+  })
+
+}
+
 function App() {
 
   return (
@@ -18,7 +26,7 @@ function App() {
       <h1>Supaship.io</h1>
 
       <section id="whenSignedOut">
-        <button id="signInBtn" className="btn btn-primary">
+        <button id="signInBtn" className="btn btn-primary" onClick={(e) => login()}>
           Sign In with Google
         </button>
       </section>
