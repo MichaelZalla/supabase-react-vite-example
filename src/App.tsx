@@ -1,6 +1,8 @@
-import './App.scss'
+import React from 'react';
 
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import { SupabaseClient, User, createClient } from '@supabase/supabase-js';
+
+import './App.scss'
 
 const SupabaseProjectUrl: string = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const SupabaseAnonKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -18,42 +20,112 @@ const login = async () => {
 
 }
 
+const useUser = (
+  client: SupabaseClient) =>
+{
+
+  const [user, setUser] = React.useState<User|null>(null)
+
+  React.useEffect(
+    () => {
+
+      const fetchUser = async () => {
+        return await sb.auth.getUser();
+      }
+
+      fetchUser()
+        .then(res => {
+
+          const {
+            data: {
+              user
+            },
+            error,
+          } = res
+
+          if(
+            error ||
+            !user
+          )
+          {
+            setUser(null)
+
+            return
+          }
+
+          setUser(user)
+
+        })
+        .catch(e => {
+
+          console.error(e)
+
+          setUser(null)
+
+        })
+
+    },
+    [client]
+  );
+
+  return [user, setUser]
+
+}
+
 function App() {
+
+  const [user] = useUser(sb);
+
+  const isSignedIn = React.useCallback(
+    () => {
+      return user !== null
+    },
+    [user]
+  )
 
   return (
     <div className="App container py-4 px-3">
 
       <h1>Supaship.io</h1>
 
-      <section id="whenSignedOut">
-        <button id="signInBtn" className="btn btn-primary" onClick={(e) => login()}>
-          Sign In with Google
-        </button>
-      </section>
+      {
+        isSignedIn() ?
 
-      <section id="whenSignedOut" hidden={true}>
+          // Signed in
+          <>
+            <section id="whenSignedIn">
 
-        <div id="userDetails"></div>
+              <div id="userDetails"></div>
 
-        <button id="signOutBtn" className="btn btn-primary">
-          Sign Out
-        </button>
+              <button id="signOutBtn" className="btn btn-primary">
+                Sign Out
+              </button>
 
-      </section>
+            </section>
 
-      <section id="myThings" hidden={true}>
+            <section id="myThings" hidden={true}>
 
-        <h2>My Things</h2>
+              <h2>My Things</h2>
 
-        <div id="myThingsList">
+              <div id="myThingsList">
 
-        </div>
+              </div>
 
-        <button id="createThing" className="btn btn-success">
-          Create a Thing
-        </button>
+              <button id="createThing" className="btn btn-success">
+                Create a Thing
+              </button>
 
-      </section>
+            </section>
+
+          </> :
+
+          // Signed out
+          <section id="whenSignedOut">
+            <button id="signInBtn" className="btn btn-primary" onClick={(e) => login()}>
+              Sign In with Google
+            </button>
+          </section>
+      }
 
       <section id="allThings">
 
