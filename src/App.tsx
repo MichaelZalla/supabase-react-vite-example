@@ -16,7 +16,7 @@ import UserDetails from './components/UserDetails';
 
 import ThingsTable from './components/ThingsTable';
 
-import { sortByWeight, makeRandomThing } from './utils';
+import { makeRandomThing } from './utils';
 
 import './App.scss'
 
@@ -54,12 +54,12 @@ function App() {
 
       const newThing = data[0] as Thing
 
-      const newThings = [
-        ...things,
-        newThing
-      ].sort(sortByWeight)
-
-      setThings(newThings)
+      setThings(things => {
+        return [
+          ...things,
+          newThing
+        ]
+      })
 
     },
     [user, things, setThings]

@@ -6,6 +6,8 @@ import { Thing } from "../types/collections/thing";
 
 import client from "../client";
 
+import { sortByWeight } from "../utils";
+
 type ThingsTableProps = {
 	things: Thing[];
 	user?: User;
@@ -36,21 +38,23 @@ const ThingsTable = ({ things, user }: ThingsTableProps) => {
 			</thead>
 			<tbody>
 			{
-				things.map(thing => (
-				<tr key={thing.id}>
-					<td>{thing.name}</td>
-					<td>{thing.weight} lb{ thing.weight === 1 ? `` : `s` }.</td>
-					{
-						user &&
-						<td>
-							<button className="btn btn-sm btn-danger" type="button" role="button"
-								onClick={e => deleteThing(thing.id)}>
-								Delete
-							</button>
-						</td>
-					}
-				</tr>
-				))
+				things
+					.sort(sortByWeight)
+					.map(thing => (
+					<tr key={thing.id}>
+						<td>{thing.name}</td>
+						<td>{thing.weight} lb{ thing.weight === 1 ? `` : `s` }.</td>
+						{
+							user &&
+							<td>
+								<button className="btn btn-sm btn-danger" type="button" role="button"
+									onClick={e => deleteThing(thing.id)}>
+									Delete
+								</button>
+							</td>
+						}
+					</tr>
+					))
 			}
 			</tbody>
 		</table>

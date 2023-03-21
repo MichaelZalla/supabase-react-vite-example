@@ -14,4 +14,9 @@ export const makeRandomThing = (
 	}
 }
 
-export const sortByWeight = (a: Thing, b: Thing) => a.weight > b.weight ? 1 : -1
+export const sortByWeight = (
+	a: Thing,
+	b: Thing): -1|0|1 =>
+{
+	return (a.weight > b.weight) ? 1 : -1
+}

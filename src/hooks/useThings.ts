@@ -4,24 +4,11 @@ import { SupabaseClient } from "@supabase/supabase-js"
 
 import { Thing } from "../types/collections/thing"
 
-import { sortByWeight } from "../utils"
-
 const useThings = (
 	client: SupabaseClient) =>
   {
 
 	const [things, setThings] = React.useState<Thing[]>([])
-
-	const setThingsSorted = React.useCallback(
-		(things: Thing[]) => {
-
-			things.sort(sortByWeight)
-
-			return setThings(things)
-
-		},
-		[setThings]
-	)
 
 	React.useEffect(
 		() => {
@@ -34,12 +21,12 @@ const useThings = (
 
 				let things = data ? (data as Thing[]) : []
 
-				setThingsSorted(things ? (things as Thing[]) : [])
+				setThings(things)
 
 			})
 
 		},
-		[client, setThingsSorted]
+		[client, setThings]
 	)
 
 	React.useEffect(
@@ -54,13 +41,24 @@ const useThings = (
 
 							const newThing = payload.new as Thing
 
-							const newThings = [
-								...things,
-								newThing,
-							]
+							setThings(things => {
 
-							// @TODO(mzalla) Race conditions
-							setThingsSorted(newThings)
+								// Make sure this wasn't a thing that our client
+								// has already added to `things[]`
+
+								const matchingThings = things
+									.filter(thing => thing.id === newThing.id)
+
+								if(matchingThings.length) {
+									return things;
+								}
+
+								return [
+									...things,
+									newThing,
+								]
+
+							})
 
 							return;
 
@@ -68,14 +66,13 @@ const useThings = (
 
 							const updatedThing = payload.new as Thing
 
-							const updatedThings = things.map(thing =>
-								(thing.id === updatedThing.id) ?
-									updatedThing :
-									thing
+							setThings(
+								things => things.map(thing =>
+									(thing.id === updatedThing.id) ?
+										updatedThing :
+										thing
+								)
 							)
-
-							// @TODO(mzalla) Race conditions
-							setThingsSorted(updatedThings)
 
 							return;
 
@@ -83,17 +80,16 @@ const useThings = (
 
 							const { id } = payload.old as Thing
 
-							const remainingThings = things.filter(thing => {
-								return thing.id !== id
-							})
-
-							// @TODO(mzalla) Race conditions
-							setThingsSorted(remainingThings)
+							setThings(
+								things => things.filter(thing => thing.id !== id)
+							)
 
 							return;
 
 						default:
+
 							// Impossible?!
+
 							break;
 					}
 
@@ -105,7 +101,7 @@ const useThings = (
 			}
 
 		},
-		[things, setThingsSorted]
+		[things, setThings]
 	)
 
 	return [things, setThings] as const
