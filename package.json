@@ -1,5 +1,9 @@
 {
   "name": "supabase-react-vite-example",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MichaelZalla/supabase-react-vite-example.git"
+  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
