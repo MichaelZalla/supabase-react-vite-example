@@ -29,7 +29,7 @@ const ThingsTable = ({ things, user }: ThingsTableProps) => {
 				{
 					user &&
 					<th>
-						{/* Delete icon */}
+						{/* 'Delete' */}
 					</th>
 				}
 			</tr>
