@@ -173,7 +173,7 @@ function App() {
 
             // Signed in
             <>
-              <section id="whenSignedIn">
+              <section id="whenSignedIn" className='py-4'>
 
                 <UserDetails />
 
@@ -181,7 +181,7 @@ function App() {
 
               </section>
 
-              <section id="myThings" hidden={true}>
+              <section id="myThings" className='py-4' hidden={true}>
 
                 <h2>My Things</h2>
 
@@ -198,14 +198,15 @@ function App() {
             </> :
 
             // Signed out
-            <section id="whenSignedOut">
+            <section id="whenSignedOut" className='py-4'>
+
               <SignInButton />
+
             </section>
         }
       </UserContext.Provider>
 
-
-      <section id="allThings">
+      <section id="allThings" className='py-4'>
 
         <h2>All Things</h2>
 
