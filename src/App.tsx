@@ -26,6 +26,8 @@ function App() {
 
   const [things, setThings] = useThings(client);
 
+  const myThings = things.filter(thing => thing.owner === user?.id)
+
   const isSignedIn = React.useCallback(
     () => user !== null,
     [user]
@@ -87,9 +89,7 @@ function App() {
 
                   <h2>My Things</h2>
 
-                  <div id="myThingsList">
-
-                  </div>
+                  <ThingsTable things={myThings} />
 
                   <button id="createThing" className="btn btn-success"
                     onClick={e => createThing()}>
