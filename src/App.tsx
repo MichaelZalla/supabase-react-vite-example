@@ -89,7 +89,11 @@ function App() {
 
                   <h2>My Things</h2>
 
-                  <ThingsTable things={myThings} user={user!}/>
+                  {
+                    myThings.length ?
+                      <ThingsTable things={myThings} user={user!}/> :
+                      <p>You haven't created any Things yet!</p>
+                  }
 
                   <button id="createThing" className="btn btn-success"
                     onClick={e => createThing()}>
@@ -114,7 +118,11 @@ function App() {
 
         <h2>All Things</h2>
 
-        <ThingsTable things={things} />
+        {
+          things.length ?
+            <ThingsTable things={things} /> :
+            <p>Looks like no one has created a Thing yet! Maybe you could be first!!</p>
+        }
 
       </section>
 
