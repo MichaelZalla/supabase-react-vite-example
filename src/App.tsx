@@ -12,9 +12,31 @@ import SignInButton from './components/SignInButton';
 import SignOutButton from './components/SignOutButton';
 import UserDetails from './components/UserDetails';
 
+import ThingsTable from './components/ThingsTable';
+
 function App() {
 
   const [user] = useUser(client);
+
+  const [allThings, setAllThings] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+
+    client.from('things')
+      .select()
+      .then(res => {
+
+        const { data, error } = res
+
+        let things = data ? data : []
+
+        things.sort((a, b) => a.weight > b.weight ? -1 : 1)
+
+        setAllThings(things || [])
+
+      })
+
+  }, [setAllThings])
 
   const isSignedIn = React.useCallback(
     () => {
@@ -71,7 +93,7 @@ function App() {
 
         <h2>All Things</h2>
 
-        <div id="allThingsList"></div>
+        <ThingsTable things={allThings} />
 
       </section>
 
