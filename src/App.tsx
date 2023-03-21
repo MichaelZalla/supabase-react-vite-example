@@ -89,7 +89,7 @@ function App() {
 
                   <h2>My Things</h2>
 
-                  <ThingsTable things={myThings} />
+                  <ThingsTable things={myThings} user={user!}/>
 
                   <button id="createThing" className="btn btn-success"
                     onClick={e => createThing()}>
