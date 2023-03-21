@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import './App.css'
+
+import './App.scss'
 
 function App() {
 
@@ -8,8 +9,8 @@ function App() {
   return (
     <div className="App">
       <h1>Supaship.io</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+      <div className="container py-4 px-3 mx-auto card">
+        <button className="btn btn-primary" onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
       </div>
