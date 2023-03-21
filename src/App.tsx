@@ -1,16 +1,10 @@
 import React from 'react';
 
-import { SupabaseClient, User, createClient } from '@supabase/supabase-js';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 
 import './App.scss'
 
-const SupabaseProjectUrl: string = import.meta.env.VITE_SUPABASE_PROJECT_URL;
-const SupabaseAnonKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-const sb: SupabaseClient = createClient(
-  SupabaseProjectUrl,
-  SupabaseAnonKey
-)
+import client from './client';
 
 const useUser = (
   client: SupabaseClient) =>
@@ -48,11 +42,7 @@ const useUser = (
   React.useEffect(
     () => {
 
-      const fetchUser = async () => {
-        return await sb.auth.getUser();
-      }
-
-      fetchUser()
+      client.auth.getUser()
         .then(res => {
 
           const {
@@ -96,7 +86,7 @@ const SignInButton = () => {
   const login = React.useCallback(
     async () => {
 
-      await sb.auth.signInWithOAuth({
+      await client.auth.signInWithOAuth({
         provider: 'google',
       })
 
@@ -117,7 +107,7 @@ const SignOutButton = () => {
   const logout = React.useCallback(
     async () => {
 
-      const { error } = await sb.auth.signOut()
+      const { error } = await client.auth.signOut()
 
       if(error) {
         console.error(error)
@@ -157,7 +147,7 @@ const UserDetails = () => {
 
 function App() {
 
-  const [user] = useUser(sb);
+  const [user] = useUser(client);
 
   const isSignedIn = React.useCallback(
     () => {
