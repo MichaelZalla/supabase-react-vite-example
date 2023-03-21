@@ -2,9 +2,12 @@ import './App.scss'
 
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
+const SupabaseProjectUrl: string = import.meta.env.VITE_SUPABASE_PROJECT_URL;
+const SupabaseAnonKey: string = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
 const sb: SupabaseClient = createClient(
-  `https://jwfqaqhtkbqzafkhyygk.supabase.com`,
-  `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3ZnFhcWh0a2JxemFma2h5eWdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzkzNjMxNzUsImV4cCI6MTk5NDkzOTE3NX0.xITh6qh7KE7sP9wz1xYWQ5UsTIOtm9uvxpvpJ_A0Sc8`
+  SupabaseProjectUrl,
+  SupabaseAnonKey
 )
 
 function App() {
