@@ -4,11 +4,24 @@ import { SupabaseClient } from "@supabase/supabase-js"
 
 import { Thing } from "../types/collections/thing"
 
+import { sortByWeight } from "../utils"
+
 const useThings = (
 	client: SupabaseClient) =>
   {
 
 	const [things, setThings] = React.useState<Thing[]>([])
+
+	const setThingsSorted = React.useCallback(
+		(things: Thing[]) => {
+
+			things.sort(sortByWeight)
+
+			return setThings(things)
+
+		},
+		[setThings]
+	)
 
 	React.useEffect(
 		() => {
@@ -19,16 +32,14 @@ const useThings = (
 
 				const { data, error } = res
 
-				let things = data ? data : []
+				let things = data ? (data as Thing[]) : []
 
-				things.sort((a, b) => a.weight > b.weight ? -1 : 1)
-
-				setThings(things ? (things as Thing[]) : [])
+				setThingsSorted(things ? (things as Thing[]) : [])
 
 			})
 
 		},
-		[client, setThings]
+		[client, setThingsSorted]
 	)
 
 	return [things, setThings] as const
