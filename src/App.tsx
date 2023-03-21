@@ -29,6 +29,10 @@ const useUser = (
             setUser(null)
             break;
 
+          case `USER_UPDATED`:
+            setUser(session ? session.user : null)
+            break;
+
           default:
             // Do nothing
             break;
